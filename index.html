@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+
 <title>등급 시간 계산기</title>
 
 <style>
@@ -430,6 +432,12 @@ function clearHistory(){
 }
 
 renderHistory();
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js');
+    });
+}
 
 </script>
 
