@@ -1,4 +1,4 @@
-const CACHE_NAME = 'time-calc-v1';
+const CACHE_NAME = 'time-calc-v2';
 
 const FILES_TO_CACHE = [
   './',
