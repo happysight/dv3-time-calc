@@ -2,262 +2,469 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-<title>드래곤 교배시간 역산기</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#121212">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="교배시간">
-<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#2563eb">
+<title>등급 시간 계산기</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Pretendard',sans-serif;
 }
 
-body {
-    background: #121212;
-    color: #e2e8f0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+body{
+    background:#09090b;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
 }
 
-.app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: calc(env(safe-area-inset-top) + 32px) 24px calc(env(safe-area-inset-bottom) + 32px) 24px;
+.card{
+    width:100%;
+    max-width:430px;
+    background:#18181b;
+    border:1px solid #27272a;
+    border-radius:28px;
+    padding:24px;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
 }
 
-header {
-    margin-bottom: 40px;
+.title{
+    text-align:center;
+    font-size:28px;
+    font-weight:800;
+    color:white;
+    margin-bottom:8px;
 }
 
-h1 {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: #ffffff;
-    line-height: 1.3;
+.subtitle{
+    text-align:center;
+    color:#a1a1aa;
+    margin-bottom:24px;
 }
 
-.title-sub {
-    font-size: 15px;
-    color: #a1a1aa;
-    margin-top: 8px;
+.label{
+    display:block;
+    color:white;
+    font-weight:600;
+    margin-bottom:8px;
 }
 
-.input-section {
-    flex: 1;
+.time-row{
+    display:flex;
+    gap:12px;
 }
 
-.label {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: 600;
-    font-size: 15px;
-    color: #a1a1aa;
+.input-box{
+    flex:1;
 }
 
-.row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
+input,
+select{
+    width:100%;
+    padding:14px;
+    background:#27272a;
+    border:2px solid #3f3f46;
+    border-radius:14px;
+    color:white;
+    font-size:16px;
 }
 
-.input-group {
-    position: relative;
-    flex: 1;
+input::placeholder{
+    color:#71717a;
 }
 
-.input-group span {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #71717a;
-    font-size: 16px;
-    font-weight: 600;
-    pointer-events: none;
+input:focus,
+select:focus{
+    outline:none;
+    border-color:#3b82f6;
 }
 
-input, select {
-    width: 100%;
-    padding: 20px 48px 20px 20px;
-    border: none;
-    border-radius: 16px;
-    background: #27272a;
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-    outline: none;
-    transition: background 0.2s;
-    appearance: none;
-    -webkit-appearance: none;
-    user-select: auto;
-    -webkit-user-select: auto;
+button{
+    width:100%;
+    border:none;
+    border-radius:16px;
+    padding:16px;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:16px;
 }
 
-select {
-    padding-right: 20px;
-    font-size: 18px;
-    font-weight: 600;
+.calc-btn{
+    background:#2563eb;
+    color:white;
 }
 
-input::placeholder {
-    color: #52525b;
-    font-weight: 500;
+.delete-btn{
+    background:#dc2626;
+    color:white;
+    font-size:15px;
+    padding:12px;
 }
 
-input:focus, select:focus {
-    background: #3f3f46;
-    box-shadow: 0 0 0 2px #3b82f6 inset;
+.result{
+    margin-top:20px;
+    background:#27272a;
+    border:1px solid #3f3f46;
+    border-radius:18px;
+    padding:20px;
 }
 
-.button-container {
-    margin-top: 16px;
+.result-title{
+    text-align:center;
+    color:#a1a1aa;
+    margin-bottom:10px;
 }
 
-button {
-    width: 100%;
-    padding: 20px;
-    border: none;
-    border-radius: 16px;
-    background: #3b82f6;
-    color: #ffffff;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.1s, background 0.2s;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+.final-time{
+    text-align:center;
+    font-size:36px;
+    font-weight:800;
+    color:#60a5fa;
+    margin-bottom:15px;
 }
 
-button:active {
-    transform: scale(0.96);
-    background: #2563eb;
+.info{
+    display:flex;
+    justify-content:space-between;
+    color:white;
+    margin-top:8px;
 }
 
-.result {
-    background: #1e1e1e;
-    border-radius: 20px;
-    padding: 28px 24px;
-    text-align: center;
-    border: 1px solid #2d2d2d;
-    margin-top: 32px;
-    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.badge{
+    padding:6px 12px;
+    border-radius:999px;
+    font-weight:700;
 }
 
-.result-title {
-    color: #a1a1aa;
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: 600;
+.history-item{
+    background:#3f3f46;
+    border-radius:12px;
+    padding:12px;
+    margin-top:10px;
+    color:white;
 }
 
-.time {
-    font-size: 38px;
-    font-weight: 900;
-    margin-bottom: 16px;
-    color: #93c5fd;
-    letter-spacing: -1px;
+.history-date{
+    color:#a1a1aa;
+    font-size:12px;
+    margin-top:4px;
 }
 
-.info {
-    color: #71717a;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.mode-badge{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    margin-top:6px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app-container">
-    <header>
-        <h1>교배시간 역산기</h1>
-        <div class="title-sub">원래 교배시간을 정확하게 계산해 드립니다.</div>
-    </header>
+<div class="card">
 
-    <div class="input-section">
-        <label class="label">게임에 표시되는 시간</label>
-        <div class="row">
-            <div class="input-group">
-                <input type="number" id="hour" placeholder="0" inputmode="numeric" pattern="[0-9]*">
-                <span>시간</span>
-            </div>
-            <div class="input-group">
-                <input type="number" id="minute" placeholder="0" inputmode="numeric" pattern="[0-9]*">
-                <span>분</span>
-            </div>
+    <div class="title">⏱️ 시간 계산기</div>
+    <div class="subtitle">등급별 시간 차감 계산</div>
+
+    <label class="label">시간 입력</label>
+
+    <div class="time-row">
+        <div class="input-box">
+            <input type="number" id="hours" placeholder="시간" min="0">
         </div>
 
-        <label class="label">계정 등급 혜택</label>
-        <select id="grade">
-            <option value="0">노말 (0%)</option>
-            <option value="0.05">브론즈 / 실버 (5%)</option>
-            <option value="0.08">골드 / 플래티넘 (8%)</option>
-            <option value="0.10">다이아 / MVP (10%)</option>
-        </select>
-        
-        <div id="result"></div>
+        <div class="input-box">
+            <input type="number" id="minutes" placeholder="분" min="0" max="59">
+        </div>
     </div>
 
-    <div class="button-container">
-        <button onclick="calculate()">원래 시간 계산하기</button>
+    <br>
+
+    <label class="label">계산 모드</label>
+<select id="mode">
+<option value="normal">정방향 계산</option>
+<option value="reverse" selected>역방향 계산</option>
+</select>
+
+<br>
+
+<label class="label">등급 선택</label>
+
+    <select id="grade">
+        <option>노멀</option>
+        <option>브론즈 / 실버</option>
+        <option>골드 / 플래티넘</option>
+        <option>다이아 / MVP</option>
+    </select>
+
+    <button class="calc-btn" onclick="calculate()">
+        계산하기
+    </button>
+
+    <div class="result" id="result">
+
+        <div class="result-title">원본 시간</div>
+
+        <div class="final-time">
+            0시간 0분
+        </div>
+
+        <div class="info">
+            <span>등급</span>
+            <span class="badge">노멀</span>
+        </div>
+
+        <div class="info">
+            <span>차감률</span>
+            <span>0%</span>
+        </div>
+
+        <div class="info">
+            <span>차감 시간</span>
+            <span>0시간 0분</span>
+        </div>
+
     </div>
+
+    <div class="result">
+
+        <div class="result-title">
+            📋 계산 기록 (최근 20개)
+        </div>
+
+        <div id="historyList">
+            기록이 없습니다.
+        </div>
+
+        <button
+            class="delete-btn"
+            onclick="clearHistory()">
+            기록 삭제
+        </button>
+
+    </div>
+
 </div>
 
 <script>
-function calculate() {
-    const hourInput = document.getElementById("hour").value;
-    const minuteInput = document.getElementById("minute").value;
-    
-    const h = Number(hourInput);
-    const m = Number(minuteInput);
-    const rate = Number(document.getElementById("grade").value);
 
-    if (hourInput === "" && minuteInput === "") return;
+function getRate(grade){
 
-    const displayedMinutes = (h * 60) + m;
-    const originalMinutes = Math.round(displayedMinutes / (1 - rate));
+    switch(grade){
 
-    const finalHour = Math.floor(originalMinutes / 60);
-    const finalMinute = originalMinutes % 60;
+        case "브론즈 / 실버":
+            return 0.05;
+
+        case "골드 / 플래티넘":
+            return 0.08;
+
+        case "다이아 / MVP":
+            return 0.10;
+
+        default:
+            return 0;
+    }
+}
+
+function getBadgeColor(grade){
+
+    switch(grade){
+
+        case "브론즈 / 실버":
+            return "#b45309";
+
+        case "골드 / 플래티넘":
+            return "#ca8a04";
+
+        case "다이아 / MVP":
+            return "#2563eb";
+
+        default:
+            return "#52525b";
+    }
+}
+
+function calculate(){
+
+    const h =
+        parseInt(document.getElementById("hours").value) || 0;
+
+    const m =
+        parseInt(document.getElementById("minutes").value) || 0;
+
+    const grade =
+        document.getElementById("grade").value;
+
+    if(m > 59){
+        alert("분은 0~59 사이만 입력 가능합니다.");
+        return;
+    }
+
+    const totalMinutes =
+        (h * 60) + m;
+
+    const rate =
+        getRate(grade);
+
+    const mode =
+        document.getElementById("mode").value;
+
+    const finalMinutes =
+        mode === "normal"
+        ? Math.floor(totalMinutes * (1 - rate))
+        : Math.round(totalMinutes / (1 - rate));
+
+    const deductedMinutes =
+        mode === "normal"
+        ? totalMinutes - finalMinutes
+        : finalMinutes - totalMinutes;
+
+    const finalHour =
+        Math.floor(finalMinutes / 60);
+
+    const finalMin =
+        finalMinutes % 60;
+
+    const deductedHour =
+        Math.floor(deductedMinutes / 60);
+
+    const deductedMin =
+        deductedMinutes % 60;
+
+    const badgeColor =
+        getBadgeColor(grade);
+
+    const resultTitle =
+        mode === "normal"
+        ? "최종 시간"
+        : "원본 시간";
 
     document.getElementById("result").innerHTML = `
-        <div class="result">
-            <div class="result-title">원래 교배시간</div>
-            <div class="time">${finalHour}시간 ${finalMinute}분</div>
-            <div class="info">
-                적용 감소율: ${rate * 100}%<br>
-                입력 시간: ${h}시간 ${m}분
-            </div>
+        <div class="result-title">${resultTitle}</div>
+
+        <div class="final-time">
+            ${finalHour}시간 ${finalMin}분
+        </div>
+
+        <div class="info">
+            <span>등급</span>
+            <span class="badge"
+            style="background:${badgeColor};color:white;">
+                ${grade}
+            </span>
+        </div>
+
+        <div class="info">
+            <span>차감률</span>
+            <span>${rate * 100}%</span>
+        </div>
+
+        <div class="info">
+            <span>차감 시간</span>
+            <span>${deductedHour}시간 ${deductedMin}분</span>
         </div>
     `;
-    
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+    const record = {
+
+        date:new Date().toLocaleString(),
+
+        mode: mode === "normal" ? "정방향" : "역방향",
+
+        input:`${h}시간 ${m}분`,
+
+        grade:grade,
+
+        result:`${finalHour}시간 ${finalMin}분`,
+
+        rate:`${rate * 100}%`
+    };
+
+    let history =
+        JSON.parse(
+            localStorage.getItem("timeHistory")
+        ) || [];
+
+    history.unshift(record);
+
+    history = history.slice(0,20);
+
+    localStorage.setItem(
+        "timeHistory",
+        JSON.stringify(history)
+    );
+
+    renderHistory();
 }
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .catch(err => console.log('Service Worker Error'));
-    });
+function renderHistory(){
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("timeHistory")
+        ) || [];
+
+    const container =
+        document.getElementById("historyList");
+
+    if(history.length === 0){
+
+        container.innerHTML =
+            "기록이 없습니다.";
+
+        return;
+    }
+
+    container.innerHTML =
+        history.map(item => `
+
+        <div class="history-item">
+
+            <div><b>${item.result}</b></div>
+
+            <div>
+                ${item.input} · ${item.grade}
+            </div>
+
+            <div class="mode-badge"
+            style="background:${item.mode === '역방향' ? '#1e40af' : '#166534'};color:white;">
+                ${item.mode || '정방향'}
+            </div>
+
+            <div>
+                차감률: ${item.rate}
+            </div>
+
+            <div class="history-date">
+                ${item.date}
+            </div>
+
+        </div>
+
+        `).join('');
 }
+
+function clearHistory(){
+
+    if(confirm("기록을 모두 삭제할까요?")){
+
+        localStorage.removeItem("timeHistory");
+
+        renderHistory();
+    }
+}
+
+renderHistory();
+
 </script>
 
 </body>
